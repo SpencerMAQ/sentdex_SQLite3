@@ -1,3 +1,5 @@
+# https://github.com/sqlitebrowser/sqlitebrowser/releases/tag/v3.9.1
+
 import sqlite3
 
 # if it attempts to connect to a non-existent
@@ -16,6 +18,11 @@ def create_table():
     c.execute('CREATE TABLE IF NOT EXISTS stuffToPlot(unix REAL, datestamp TEXT, \
     keyword TEXT, value REAL)')
     # in general, ALL CAPS for things that are pure SQL (best practice)
+
+    ###
+    ### stuffToPlot is the name of the 'table' with the arguments in
+    # the parenthesis as its columns
+    #check DB Browser for SQLite
 
 # columns here correspond to the same columns @ create_table
 def data_entry():
