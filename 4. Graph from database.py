@@ -4,6 +4,10 @@ import sqlite3
 import time         # unix and sleep
 import datetime     # time/datestamp
 import random
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import style
+style.use('fivethirtyeight')    # dunno what this does #graphics probably
 
 # if it attempts to connect to a non-existent
 # database, it creates it
@@ -72,9 +76,10 @@ def read_from_db():
     # SELECT * (select everything)
     #c.execute('SELECT * FROM stuffToPlot')
     # values e.g. keyword PYTHON vs Python = case sensitive
-    c.execute("SELECT * FROM stuffToPlot WHERE value=3 AND keyword='Python'")
-    #c.execute("SELECT * FROM stuffToPlot WHERE unix > 1498312457")
+    #c.execute("SELECT * FROM stuffToPlot WHERE value=3 AND keyword='Python'")
+    c.execute("SELECT * FROM stuffToPlot WHERE unix > 1498312457")
     # think of the 'cursor' as doing some actual selection on the db
+    # SELECT ONLY SELECTS, c.fetchall does the COPY
 
     ### in order to SELECT the columns in different order
     # any order not nec same as the data_entry
@@ -87,6 +92,24 @@ def read_from_db():
     ### prints a dictionary of tuples   ## SAMPLE 2
     for row in c.fetchall():
         print(row)
+
+def graph_data():
+    c.execute('SELECT unix, value FROM stuffToPlot')
+    dates = []
+    values = []
+    for row in c.fetchall():
+        # row[0] = unix, 1 = VALUE
+        #print(row[0])
+        #print(datetime.datetime.fromtimestamp(row[0]))
+        dates.append(datetime.datetime.fromtimestamp(row[0]))
+        values.append(row[1])
+
+    ## '-' = line style
+    ## check tooltip
+    plt.plot_date(dates, values, '-')
+    plt.show()
+
+graph_data()
 
 #create_table()
 #data_entry()

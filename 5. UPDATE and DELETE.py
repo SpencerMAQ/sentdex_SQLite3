@@ -1,9 +1,15 @@
-# 3rd SQLite tutorial
+# 5th SQLite tutorial
+# point of NO RETURN (DELETES UPDATES)
+# UPDATE, DELETE = PERMANENT
 
 import sqlite3
 import time         # unix and sleep
 import datetime     # time/datestamp
 import random
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import style
+style.use('fivethirtyeight')    # dunno what this does #graphics probably
 
 # if it attempts to connect to a non-existent
 # database, it creates it
@@ -72,9 +78,10 @@ def read_from_db():
     # SELECT * (select everything)
     #c.execute('SELECT * FROM stuffToPlot')
     # values e.g. keyword PYTHON vs Python = case sensitive
-    c.execute("SELECT * FROM stuffToPlot WHERE value=3 AND keyword='Python'")
-    #c.execute("SELECT * FROM stuffToPlot WHERE unix > 1498312457")
+    #c.execute("SELECT * FROM stuffToPlot WHERE value=3 AND keyword='Python'")
+    c.execute("SELECT * FROM stuffToPlot WHERE unix > 1498312457")
     # think of the 'cursor' as doing some actual selection on the db
+    # SELECT ONLY SELECTS, c.fetchall does the COPY
 
     ### in order to SELECT the columns in different order
     # any order not nec same as the data_entry
@@ -88,6 +95,54 @@ def read_from_db():
     for row in c.fetchall():
         print(row)
 
+def graph_data():
+    c.execute('SELECT unix, value FROM stuffToPlot')
+    dates = []
+    values = []
+    for row in c.fetchall():
+        # row[0] = unix, 1 = VALUE
+        #print(row[0])
+        #print(datetime.datetime.fromtimestamp(row[0]))
+        dates.append(datetime.datetime.fromtimestamp(row[0]))
+        values.append(row[1])
+
+    ## '-' = line style
+    ## check tooltip
+    plt.plot_date(dates, values, '-')
+    plt.show()
+
+
+def del_and_update():
+    c.execute('SELECT * FROM stuffToPlot')
+    [print(row) for row in c.fetchall()]
+
+    # c.execute('UPDATE stuffToPlot SET value = 99 WHERE value = 3')
+    #
+    # conn.commit()
+    #
+    # c.execute('SELECT * FROM stuffToPlot')
+    # [print(row) for row in c.fetchall()]
+
+    # How to get rid of everything that has a VALUE = 99
+    c.execute('DELETE FROM stuffToPlot WHERE value = 99')
+    # to limit, type after value = 99, LIMIT 50 (only for MySQL, not SQLite)
+    conn.commit()
+    # print(50*'#')
+
+    ## Note however that you might want to print first what you're about to delete
+    ## and the length of the list beofre you delete it
+    ## And ask the user to confirm the deletion first
+    # e.g.
+    # c.execute('SELECT * From stuffToPlot WHERE value = 2')
+    # print(len(c.fetchall()))
+
+    c.execute('SELECT * FROM stuffToPlot')
+    [print(row) for row in c.fetchall()]
+
+del_and_update()
+
+#graph_data()
+
 #create_table()
 #data_entry()
 #for i in range(10):
@@ -96,6 +151,6 @@ def read_from_db():
 #    # sleep = only fur the purpose of illustration so that the timestamp would go up by 1 second
 #    print(i)
 
-read_from_db()
+#read_from_db()
 c.close()
 conn.close()
