@@ -1,5 +1,6 @@
 # I don't know
 *.xml
+*.iml
 
 # Windows image file caches
 Thumbs.db
