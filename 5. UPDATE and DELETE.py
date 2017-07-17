@@ -24,8 +24,12 @@ def create_table():
 
     # inside stufftoplot = columns and datatypes of those columns
     # e.g. UNIX timestamp, type = REAL (python float)
-    c.execute('CREATE TABLE IF NOT EXISTS stuffToPlot(unix REAL, datestamp TEXT, \
-    keyword TEXT, value REAL)')
+    c.execute('''CREATE TABLE IF NOT EXISTS stuffToPlot
+                            (unix REAL,
+                            datestamp TEXT,
+                            keyword TEXT,
+                            value REAL)'''
+              )
     # in general, ALL CAPS for things that are pure SQL (best practice)
 
     ###
@@ -35,8 +39,13 @@ def create_table():
 
 # columns here correspond to the same columns @ create_table
 def data_entry():
-    c.execute("INSERT INTO stuffToPlot VALUES(2131231231, '2016-01-01', \
-    'Python', 5)")
+    c.execute('''INSERT INTO stuffToPlot
+                    VALUES(
+                    2131231231,
+                    '2016-01-01',
+                    'Python',
+                    5)'''
+              )
 
     # save db
     conn.commit()   # commit to db
@@ -55,8 +64,10 @@ def dynamic_data_entry():
 
     # in the hard-coded data entry, the values were typed in
     # here we specify first the columns for our data entry
-    c.execute('INSERT INTO stuffToPlot (unix, datestamp, keyword, value)' \
-              'VALUES (?, ?, ?, ?)', (unix, date, keyword, value))
+    c.execute('''INSERT INTO stuffToPlot (unix, datestamp, keyword, value)
+                    VALUES (?, ?, ?, ?)''',
+                    (unix, date, keyword, value)
+              )
     # you can change the order of the columns
     # you can even leave some columns blank (SQL will not insert data for the col)
 
@@ -79,7 +90,9 @@ def read_from_db():
     #c.execute('SELECT * FROM stuffToPlot')
     # values e.g. keyword PYTHON vs Python = case sensitive
     #c.execute("SELECT * FROM stuffToPlot WHERE value=3 AND keyword='Python'")
-    c.execute("SELECT * FROM stuffToPlot WHERE unix > 1498312457")
+    c.execute('''SELECT * FROM stuffToPlot
+                    WHERE unix > 1498312457'''
+              )
     # think of the 'cursor' as doing some actual selection on the db
     # SELECT ONLY SELECTS, c.fetchall does the COPY
 
